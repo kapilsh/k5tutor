@@ -1,0 +1,92 @@
+:root {
+  /* Palette — light and playful (kids' site; the other apps are dark) */
+  --bg: #fff8ee;
+  --bg-soft: #fff1dc;
+  --card: #ffffff;
+  --ink: #2f2a36;
+  --ink-dim: #635b6e;
+  --ink-faint: #9a91a4;
+  --border: #f0e2cc;
+  --border-strong: #e3cfae;
+  --primary: #ff5d8f;
+  --primary-dark: #e2447a;
+  --accent: #ffc93c;
+  --blue: #3d8bfd;
+  --ok: #2fb35a;
+  --ok-bg: #e6f8ec;
+  --bad: #e5484d;
+  --bad-bg: #fdecec;
+  --shadow: 0 6px 0 rgba(47, 42, 54, 0.06), 0 10px 28px rgba(47, 42, 54, 0.08);
+  --radius: 18px;
+
+  /* one color per grade */
+  --g-k: #ff7eb0;
+  --g-1: #ff9f43;
+  --g-2: #f5b700;
+  --g-3: #3cc26b;
+  --g-4: #3d9df3;
+  --g-5: #8e6cf0;
+
+  --font-display: 'Fredoka', 'Nunito', ui-rounded, system-ui, sans-serif;
+  --font-body: 'Nunito', ui-rounded, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  color-scheme: light;
+  font-family: var(--font-body);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100vh;
+}
+
+body {
+  background:
+    radial-gradient(900px 500px at 90% -10%, rgba(255, 201, 60, 0.18), transparent 60%),
+    radial-gradient(800px 500px at -10% 30%, rgba(255, 126, 176, 0.1), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+a {
+  color: var(--blue);
+}
+
+button,
+select,
+input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: rgba(255, 93, 143, 0.25);
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
