@@ -7,8 +7,8 @@ import grade5 from './grade5.js'
 import { makeRng } from '../lib/rng.js'
 
 export const GRADES = [
-  { id: 'k', label: 'Kindergarten', short: 'K', art: 'pig', color: 'var(--g-k)', blurb: 'Counting, shapes, and adding & taking away to 10.', topics: gradeK },
-  { id: '1', label: 'Grade 1', short: '1', art: 'chick', color: 'var(--g-1)', blurb: 'Facts to 20, tens and ones, time and coins.', topics: grade1 },
+  { id: 'k', label: 'Kindergarten', short: 'K', art: 'pig', color: 'var(--g-k)', blurb: 'Counting, shapes, clocks, adding & taking away to 10 — and board games.', topics: gradeK },
+  { id: '1', label: 'Grade 1', short: '1', art: 'chick', color: 'var(--g-1)', blurb: 'Facts to 20, tens and ones, time, coins, and checkers & chess moves.', topics: grade1 },
   { id: '2', label: 'Grade 2', short: '2', art: 'frog', color: 'var(--g-2)', blurb: 'Regrouping, place value to 1,000, money and measuring.', topics: grade2 },
   { id: '3', label: 'Grade 3', short: '3', art: 'bunny', color: 'var(--g-3)', blurb: 'Times tables, division, fractions, area and perimeter.', topics: grade3 },
   { id: '4', label: 'Grade 4', short: '4', art: 'bear', color: 'var(--g-4)', blurb: 'Long division, multi-digit multiplication, fractions and decimals.', topics: grade4 },

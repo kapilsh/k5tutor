@@ -6,7 +6,7 @@ import { GRADES, TOPICS, generateSheet, layoutFor, valueFor } from '../src/curri
 import { assemble, checkAnswer, fieldsOf, partsOf } from '../src/lib/answers.js'
 import { makeRng } from '../src/lib/rng.js'
 
-const FIG_TYPES = new Set(['critters', 'critter', 'tenFrame', 'baseTen', 'array', 'groups', 'clock', 'coins', 'ruler', 'angle', 'fraction', 'numberLine', 'decimalGrid', 'shape', 'pattern', 'rect', 'prism', 'coord', 'pictograph', 'bars'])
+const FIG_TYPES = new Set(['critters', 'critter', 'tenFrame', 'baseTen', 'array', 'groups', 'clock', 'coins', 'ruler', 'angle', 'fraction', 'numberLine', 'decimalGrid', 'shape', 'pattern', 'rect', 'prism', 'coord', 'pictograph', 'bars', 'digital', 'sky', 'dice', 'track', 'board', 'chessPiece', 'ticTacToe', 'sudoku'])
 const SAMPLES = 400
 let errors = 0
 const fail = (t, lvl, msg, p) => {

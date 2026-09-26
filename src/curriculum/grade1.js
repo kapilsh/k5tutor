@@ -1,5 +1,6 @@
 import { ANIMALS, PLURAL } from './vocab.js'
 import { B, CMP, NAMES, choice, cmp, inline, lv, mc, num, time, vertical } from './helpers.js'
+import { g1Games } from './games.js'
 
 export default [
   {
@@ -225,6 +226,37 @@ export default [
     },
   },
   {
+    id: 'g1-clock-match',
+    strand: 'Measurement',
+    title: 'Clock Match',
+    blurb: 'Match clock faces to digital times, and find one hour later.',
+    glyph: '⏰',
+    instructions: 'Answer each clock question.',
+    levels: ["Match o'clock", 'Match half past', 'Clock to digital', 'One hour later'],
+    cols: (l) => (l === 4 ? 3 : 1),
+    perPage: (l) => (l === 4 ? 12 : 4),
+    gen(rng, level) {
+      const h = rng.int(1, 12)
+      const m = level === 1 ? 0 : level === 2 ? 30 : rng.pick([0, 30])
+      const fmt = (a, b) => `${a}:${String(b).padStart(2, '0')}`
+      const next = (x) => (x % 12) + 1
+      if (level === 4) {
+        return { prompt: 'What time will it be in 1 hour?', figure: { type: 'clock', h, m, size: 110 }, ...inline([B(0)], [time(next(h), m)]) }
+      }
+      // tempting wrong answers: hands read the wrong way round, or the hour hand read as the next hour
+      const swap = m === 0 ? (h === 12 ? null : fmt(12, h * 5)) : fmt(6, h === 12 ? 0 : h * 5)
+      const wrong = m === 30 ? [fmt(next(h), 30), fmt(h, 0)] : [fmt(next(h), 0), fmt(rng.int(1, 12), 30)]
+      const opts = rng.shuffle([...new Set([fmt(h, m), ...(swap && swap !== fmt(h, m) ? [swap] : []), ...wrong])].slice(0, 3))
+      const parse = (o) => o.split(':').map(Number)
+      if (level === 3) {
+        const optionFigs = Object.fromEntries(opts.map((o) => [o, { type: 'digital', h: parse(o)[0], m: parse(o)[1], size: 100, big: true }]))
+        return { figure: { type: 'clock', h, m, size: 110 }, ...mc('Which digital clock shows the same time?', opts, fmt(h, m), { optionFigs }) }
+      }
+      const optionFigs = Object.fromEntries(opts.map((o) => [o, { type: 'clock', h: parse(o)[0], m: parse(o)[1], size: 100, big: true }]))
+      return { figure: { type: 'digital', h, m, size: 110 }, ...mc('Which clock shows this time?', opts, fmt(h, m), { optionFigs }) }
+    },
+  },
+  {
     id: 'g1-coins',
     strand: 'Measurement',
     title: 'Counting Coins',
@@ -373,4 +405,5 @@ export default [
       return mc(`“${words[n]}”`, rng.shuffle(opts), n)
     },
   },
+  ...g1Games,
 ]

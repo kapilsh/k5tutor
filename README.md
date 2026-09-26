@@ -4,7 +4,10 @@
 
 Counting critters, skip counting, number bonds, addition and subtraction with regrouping, place value,
 telling time, money, times tables, long division, fractions, decimals, area, volume, coordinates and more —
-**88 topics, 294 levels**, loosely following the Common Core progression. Every topic starts easy and levels up.
+**98 topics, 339 levels**, loosely following the Common Core progression. Every topic starts easy and levels up.
+A **Games** strand (K–1) builds the mental models behind board games: counting spaces on a race track with
+ladders and slides, directions on a grid, tic-tac-toe, naming board squares, checkers jumps, chess piece moves
+and mini sudoku.
 
 - **Practice online** — one question at a time with a buddy (pig, cow, chick, frog…). Get 8 of 10 right to
   unlock the next level. Number pad for tablets, optional sounds.
@@ -34,11 +37,12 @@ and publishes on push to `main`. Pages source must be set to "GitHub Actions".
 
 | Path | What |
 | --- | --- |
+| `src/curriculum/games.js` | The Games topics (race track, grid walk, tic-tac-toe, board squares, checkers, chess, mini sudoku), included by the K and Grade 1 files. |
 | `src/curriculum/grade{K,1..5}.js` | Topics. Each has `levels`, a print layout (`cols`, `perPage`) and `gen(rng, level)` returning a problem. |
 | `src/curriculum/helpers.js` | The problem shape and builders: inline equations, column arithmetic, long division, number bonds, multiple choice. |
 | `src/lib/answers.js` | Answer kinds (number, fraction, time, point, choice) and how typed input is checked — equivalent fractions, `1,250`, `.5`, `3:05` are all accepted. |
 | `src/components/Problem.jsx` | Renders a problem as printable (empty boxes), answer key (red), or online (inputs). |
-| `src/components/figures/` | SVG pictures: critter groups, ten frames, base-ten blocks, clocks, coins, rulers, fraction shapes, number lines, arrays, shapes, patterns, area/volume, coordinate grids, picture and bar graphs. |
+| `src/components/figures/` | SVG pictures: critter groups, ten frames, base-ten blocks, clocks, coins, rulers, fraction shapes, number lines, arrays, shapes, patterns, area/volume, coordinate grids, picture and bar graphs, digital clocks, dice, game boards (grid / chess / checkers), tic-tac-toe and sudoku grids. |
 | `src/components/art/Critters.jsx` | The hand-drawn animals. |
 | `src/lib/pdf.js` | PDF download: each letter-size page is snapshotted with `html-to-image` and placed with `jsPDF` (both lazy-loaded). |
 

@@ -1,7 +1,21 @@
 import { ANIMALS, COLORS, PLURAL } from './vocab.js'
 import { B, CMP, cmp, fig, inline, lv, mc, num, choice } from './helpers.js'
+import { kGames } from './games.js'
 
 const plural = (k) => PLURAL[k]
+
+const TIME_OF_DAY = {
+  morning: ['wake up and eat breakfast', 'get dressed for school', 'see the sun come up', 'catch the school bus'],
+  afternoon: ['eat lunch', 'go home from school', 'have an after-school snack', 'play at the park after lunch'],
+  night: ['go to sleep', 'put on your pajamas', 'see the moon and stars', 'hear a bedtime story'],
+}
+
+// Things that take a few seconds, some minutes, and many hours.
+const HOW_LONG = [
+  ['clap your hands', 'blow out a candle', 'sneeze', 'jump once', 'wash your hands'],
+  ['eat lunch', 'take a bath', 'read a picture book', 'walk to the park'],
+  ['sleep all night', 'a whole school day', 'a long car trip', 'grow a tall tree'],
+]
 
 export default [
   {
@@ -283,6 +297,50 @@ export default [
     },
   },
   {
+    id: 'k-clock',
+    strand: 'Time',
+    title: 'Clock Time',
+    blurb: "The short hand tells the hour. Morning, afternoon and night.",
+    glyph: '🕒',
+    instructions: 'Look at each picture. Answer the question.',
+    levels: ['The hour hand', "Find the o'clock", 'Morning, afternoon or night?', 'Which takes longer?'],
+    cols: (l) => (l === 1 ? 3 : 1),
+    perPage: (l) => lv(l, [9, 5, 5, 8]),
+    gen(rng, level) {
+      const h = rng.int(1, 12)
+      if (level === 1) {
+        return {
+          prompt: 'The short red hand shows the hour. What number does it point to?',
+          figure: { type: 'clock', h, m: 0, size: 110 },
+          ...inline([B(0), "o'clock"], [num(h)]),
+        }
+      }
+      if (level === 2) {
+        // the classic mix-up: long and short hands swapped
+        const swapped = h === 12 ? null : `12:${String(h * 5).padStart(2, '0')}`
+        const others = rng.sample([...Array(12).keys()].map((i) => i + 1).filter((x) => x !== h), swapped ? 1 : 2).map((x) => `${x}:00`)
+        const opts = rng.shuffle([`${h}:00`, ...(swapped ? [swapped] : []), ...others])
+        const optionFigs = Object.fromEntries(opts.map((o) => {
+          const [a, b] = o.split(':').map(Number)
+          return [o, { type: 'clock', h: a, m: b, size: 100, big: true }]
+        }))
+        return mc(`Which clock shows ${h} o'clock?`, opts, `${h}:00`, { optionFigs })
+      }
+      if (level === 3) {
+        const when = rng.pick(['morning', 'afternoon', 'night'])
+        const what = rng.pick(TIME_OF_DAY[when])
+        const opts = ['morning', 'afternoon', 'night']
+        return mc(`When do you ${what}?`, opts, when, { optionFigs: Object.fromEntries(opts.map((o) => [o, { type: 'sky', when: o, big: true }])) })
+      }
+      const [ta, tb] = rng.sample([0, 1, 2], 2)
+      const a = rng.pick(HOW_LONG[ta])
+      const b = rng.pick(HOW_LONG[tb])
+      const longer = rng.bool()
+      const ans = longer === ta > tb ? a : b
+      return mc(longer ? 'Which takes longer?' : 'Which is quicker?', rng.shuffle([a, b]), ans)
+    },
+  },
+  {
     id: 'k-shapes',
     strand: 'Geometry',
     title: 'Name the Shape',
@@ -346,4 +404,5 @@ export default [
       }
     },
   },
+  ...kGames,
 ]

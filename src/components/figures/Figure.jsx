@@ -1,8 +1,9 @@
 import { CritterGroup, TenFrame, BaseTen, ArrayFig, EqualGroups } from './Counting.jsx'
-import { Clock, Coins, Ruler, Angle } from './Measure.jsx'
+import { Clock, DigitalClock, Sky, Coins, Ruler, Angle } from './Measure.jsx'
 import { FractionShape, NumberLine, DecimalGrid } from './Fractions.jsx'
 import { Shape, Pattern, RectArea, Prism, CoordGrid } from './Geometry.jsx'
 import { Pictograph, BarGraph } from './Graphs.jsx'
+import { Dice, Track, Board, ChessPiece, TicTacToe, Sudoku } from './Games.jsx'
 import { Critter } from '../art/Critters.jsx'
 
 const FIGS = {
@@ -13,6 +14,8 @@ const FIGS = {
   array: ArrayFig,
   groups: EqualGroups,
   clock: Clock,
+  digital: DigitalClock,
+  sky: Sky,
   coins: Coins,
   ruler: Ruler,
   angle: Angle,
@@ -26,6 +29,12 @@ const FIGS = {
   coord: CoordGrid,
   pictograph: Pictograph,
   bars: BarGraph,
+  dice: Dice,
+  track: Track,
+  board: Board,
+  chessPiece: ChessPiece,
+  ticTacToe: TicTacToe,
+  sudoku: Sudoku,
 }
 
 export default function Figure({ fig: { type, ...props } }) {

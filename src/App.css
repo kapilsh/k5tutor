@@ -1285,6 +1285,10 @@
   width: 38px;
   height: 38px;
 }
+.choices.figs-big .choice-print .fig {
+  width: 78px;
+  height: auto;
+}
 .choice-btn {
   border: 2.5px solid var(--border-strong);
   background: #fff;
@@ -1491,6 +1495,10 @@
 .problem.sz-lg .choices.with-figs .fig {
   width: 64px;
   height: 64px;
+}
+.problem.sz-lg .choices.figs-big .fig {
+  width: 110px;
+  height: auto;
 }
 
 /* ---- Responsive ----------------------------------------------------------- */

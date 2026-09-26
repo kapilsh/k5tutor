@@ -277,7 +277,7 @@ export default [
     blurb: 'Read clocks to the minute and find elapsed time.',
     glyph: '⏱',
     instructions: 'Answer each time question.',
-    levels: ['Read the clock', 'Minutes later', 'Elapsed time'],
+    levels: ['Read the clock', 'Minutes later', 'Elapsed time', 'Find the start time', 'Hours and minutes'],
     cols: (l) => (l === 1 ? 3 : 2),
     perPage: (l) => (l === 1 ? 12 : 8),
     gen(rng, level) {
@@ -292,6 +292,20 @@ export default [
       if (level === 2) return { figure: { type: 'clock', h, m: m0, size: 110 }, prompt: `What time will it be in ${add} minutes?`, ...inline([B(0)], [time(h2, m2)]) }
       const fmt = (a, b) => `${a}:${String(b).padStart(2, '0')}`
       const [who] = rng.sample(NAMES, 1)
+      if (level === 4) {
+        const what = rng.pick(['The movie', 'Recess', 'The soccer game', 'Art class', 'The bus ride'])
+        return { prompt: `${what} ended at ${fmt(h2, m2)}. It lasted ${add} minutes. What time did it start?`, ...inline([B(0)], [time(h, m0)]) }
+      }
+      if (level === 5) {
+        const hrs = rng.int(1, 3)
+        const mins = 5 * rng.int(1, 11)
+        const tot = m0 + mins
+        const h3 = ((h + hrs + Math.floor(tot / 60) - 1) % 12) + 1
+        return {
+          prompt: `${who} went to the fair at ${fmt(h, m0)} and came home at ${fmt(h3, tot % 60)}. How long was ${who} gone?`,
+          ...inline([B(0), 'hours', B(1), 'minutes'], [num(hrs), num(mins)]),
+        }
+      }
       return { prompt: `${who} started reading at ${fmt(h, m0)} and stopped at ${fmt(h2, m2)}. How many minutes did ${who} read?`, ...inline([B(0), 'minutes'], [num(add)]) }
     },
   },

@@ -3,6 +3,22 @@ import { addPair, subPair } from './arith.js'
 import { B, CMP, NAMES, choice, cmp, inline, lv, mc, num, options, time, vertical } from './helpers.js'
 import { money } from '../lib/math.js'
 
+// a.m. / p.m. activities: [what, earliest hour, latest hour] on a 24-hour clock.
+const AM = [
+  ['wakes up', 6, 7.5],
+  ['eats breakfast', 7, 8],
+  ['gets on the school bus', 7.5, 8.5],
+  ['is fast asleep', 1, 4],
+  ['starts school', 8, 9],
+]
+const PM = [
+  ['eats lunch', 12.25, 12.75],
+  ['goes home from school', 15, 15.5],
+  ['plays at the park after school', 16, 17],
+  ['eats dinner', 17.5, 18.5],
+  ['goes to bed', 19.5, 20.5],
+]
+
 export default [
   {
     id: 'g2-add-2digit',
@@ -167,6 +183,54 @@ export default [
       const h = rng.int(1, 12)
       const m = level === 1 ? rng.pick([0, 15, 30, 45]) : 5 * rng.int(level === 2 ? 1 : 0, 11)
       return { figure: { type: 'clock', h, m, size: 120 }, ...inline([B(0)], [time(h, m)]) }
+    },
+  },
+  {
+    id: 'g2-time-words',
+    strand: 'Measurement',
+    title: 'Quarter Past, Quarter To',
+    blurb: "Say times in words, and tell a.m. from p.m.",
+    glyph: '¼',
+    instructions: 'Answer each time question.',
+    levels: ['Say it in words', 'Words to time', 'Minutes past and to', 'a.m. or p.m.?', 'Tricky hour hands'],
+    cols: (l) => (l === 2 || l === 3 ? 3 : 2),
+    perPage: (l) => lv(l, [8, 18, 18, 8, 8]),
+    gen(rng, level) {
+      const h = rng.int(1, 12)
+      const next = (h % 12) + 1
+      const prev = ((h + 10) % 12) + 1
+      const fmt = (a, b) => `${a}:${String(b).padStart(2, '0')}`
+      if (level === 1) {
+        const m = rng.pick([0, 15, 30, 45])
+        const say = { 0: `${h} o'clock`, 15: `quarter past ${h}`, 30: `half past ${h}`, 45: `quarter to ${next}` }
+        // "quarter to" names the NEXT hour; the usual slip is naming this one
+        const pool = [...Object.values(say), `quarter to ${h}`, `half past ${next}`]
+        const opts = rng.shuffle([say[m], ...rng.sample(pool.filter((x) => x !== say[m]), 3)])
+        return { figure: { type: 'clock', h, m, size: 110 }, ...mc('What time is it?', opts, say[m]) }
+      }
+      if (level === 2) {
+        const m = rng.pick([0, 15, 30, 45])
+        const words = { 0: `${h} o'clock`, 15: `quarter past ${h}`, 30: `half past ${h}`, 45: `quarter to ${next}` }[m]
+        return { prompt: `${words[0].toUpperCase()}${words.slice(1)}`, ...inline([B(0)], [time(h, m)]) }
+      }
+      if (level === 3) {
+        const k = 5 * rng.pick([1, 2, 4, 5])
+        if (rng.bool()) return { prompt: `${k} minutes past ${h}`, ...inline([B(0)], [time(h, k)]) }
+        return { prompt: `${k} minutes to ${h}`, ...inline([B(0)], [time(prev, 60 - k)]) }
+      }
+      if (level === 4) {
+        const [who] = rng.sample(NAMES, 1)
+        const pm = rng.bool()
+        const [what, lo, hi] = rng.pick(pm ? PM : AM)
+        const mins = rng.int(lo * 4, hi * 4) * 15
+        const hh = Math.floor(mins / 60)
+        const t = fmt(hh % 12 || 12, mins % 60)
+        return { figure: { type: 'digital', h: hh % 12 || 12, m: mins % 60, size: 100 }, ...mc(`${who} ${what} at ${t}. Is that a.m. or p.m.?`, ['a.m.', 'p.m.'], pm ? 'p.m.' : 'a.m.') }
+      }
+      // level 5: late in the hour the hour hand is nearly at the next number
+      const m = 5 * rng.int(7, 11)
+      const opts = rng.shuffle([fmt(h, m), fmt(next, m), fmt(h, m / 5)])
+      return { figure: { type: 'clock', h, m, size: 120 }, ...mc('What time is it? Look closely at the short hand!', opts, fmt(h, m)) }
     },
   },
   {

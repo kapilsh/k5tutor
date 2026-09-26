@@ -238,8 +238,10 @@ function Choices({ i, ctx }) {
   const val = ctx.values[i]?.v
   const res = ctx.results[i]
   const hasFigs = Object.keys(figs).length > 0
+  // clocks and pictures that need room to be read, rather than icon-sized
+  const bigFigs = Object.values(figs).some((f) => f.big)
   return (
-    <div className={`choices ${hasFigs ? 'with-figs' : ''} ${spec.options.length > 3 && !hasFigs ? 'many' : ''}`}>
+    <div className={`choices ${hasFigs ? 'with-figs' : ''} ${bigFigs ? 'figs-big' : ''} ${spec.options.length > 3 && !hasFigs ? 'many' : ''}`}>
       {spec.options.map((o, k) => {
         const content = figs[o] ? <Figure fig={figs[o]} /> : <span>{o}</span>
         if (ctx.mode !== 'online') {

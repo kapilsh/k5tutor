@@ -36,6 +36,67 @@ export function Clock({ h, m, size = 130 }) {
   )
 }
 
+// A digital clock readout, e.g. 7:30 (optionally with a.m./p.m.).
+export function DigitalClock({ h, m, ampm, size = 120 }) {
+  const t = `${h}:${String(m).padStart(2, '0')}`
+  const W = 120
+  const H = 56
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width={size} height={(size * H) / W} className="fig">
+      <rect x="2" y="2" width={W - 4} height={H - 4} rx="12" fill="#ffd43b" stroke={INK} strokeWidth="3" />
+      <rect x="10" y="10" width={W - 20} height={H - 20} rx="6" fill="#1b2b1b" />
+      <text x={ampm ? 52 : W / 2} y="40" textAnchor="middle" fontSize="26" fontWeight="700" fill="#8ce99a" fontFamily="Fredoka, sans-serif" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {t}
+      </text>
+      {ampm && (
+        <text x="97" y="39" textAnchor="middle" fontSize="12" fontWeight="700" fill="#8ce99a" fontFamily="Fredoka, sans-serif">
+          {ampm}
+        </text>
+      )}
+    </svg>
+  )
+}
+
+// Little sky pictures for morning / afternoon / night, with a word underneath.
+export function Sky({ when, label = when, size = 110 }) {
+  const sky = { morning: '#ffe3c2', afternoon: '#a5d8ff', night: '#2f3a8f' }[when]
+  return (
+    <svg viewBox="0 0 110 92" width={size} height={(size * 92) / 110} className="fig">
+      <rect x="2" y="2" width="106" height="68" rx="8" fill={sky} stroke={INK} strokeWidth="2.5" />
+      {when === 'morning' && (
+        <g>
+          <circle cx="30" cy="58" r="16" fill="#ffa94d" stroke={INK} strokeWidth="2" />
+          {[-60, -30, 0, 30, 60].map((a) => {
+            const r = (a * Math.PI) / 180
+            return <line key={a} x1={30 + Math.sin(r) * 21} y1={58 - Math.cos(r) * 21} x2={30 + Math.sin(r) * 28} y2={58 - Math.cos(r) * 28} stroke="#f76707" strokeWidth="2.5" strokeLinecap="round" />
+          })}
+        </g>
+      )}
+      {when === 'afternoon' && (
+        <g>
+          <circle cx="55" cy="26" r="13" fill="#ffd43b" stroke={INK} strokeWidth="2" />
+          {Array.from({ length: 8 }, (_, i) => {
+            const r = (i * 45 * Math.PI) / 180
+            return <line key={i} x1={55 + Math.sin(r) * 17} y1={26 - Math.cos(r) * 17} x2={55 + Math.sin(r) * 23} y2={26 - Math.cos(r) * 23} stroke="#f59f00" strokeWidth="2.5" strokeLinecap="round" />
+          })}
+        </g>
+      )}
+      {when === 'night' && (
+        <g>
+          <path d="M70 14 A16 16 0 1 0 84 40 A13 13 0 1 1 70 14 Z" fill="#fff3bf" stroke={INK} strokeWidth="1.5" />
+          {[[22, 18], [40, 34], [18, 44], [52, 14], [94, 20]].map(([x, y], i) => (
+            <circle key={i} cx={x} cy={y} r="2" fill="#fff3bf" />
+          ))}
+        </g>
+      )}
+      <path d="M3 62 Q30 52 55 62 T107 60 L107 68 Q107 69 100 69 L10 69 Q3 69 3 62 Z" fill={when === 'night' ? '#2b8a3e' : '#8ce99a'} stroke={INK} strokeWidth="2" />
+      <text x="55" y="87" textAnchor="middle" fontSize="15" fontWeight="700" fill={INK} fontFamily="Fredoka, sans-serif">
+        {label}
+      </text>
+    </svg>
+  )
+}
+
 const COINS = {
   p: { cents: 1, r: 19, fill: '#d9895b', edge: '#a4582f', label: '1¢', name: 'penny' },
   n: { cents: 5, r: 21.5, fill: '#ced4da', edge: '#868e96', label: '5¢', name: 'nickel' },
