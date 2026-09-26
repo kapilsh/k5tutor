@@ -75,6 +75,17 @@ export default function Home() {
         })}
       </section>
 
+      <a className="mystery-banner" href={href('/color')}>
+        <span className="mystery-banner-icon" aria-hidden="true">
+          🖍️
+        </span>
+        <span>
+          <b>Mystery Pictures</b>
+          <span>Solve the problem in each square, color it in, and watch a picture appear. Print one or color online.</span>
+        </span>
+        <span className="mystery-banner-go">Start coloring →</span>
+      </a>
+
       <section className="how">
         <div className="how-card">
           <span className="how-icon">✏️</span>

@@ -9,6 +9,10 @@ A **Games** strand (K–1) builds the mental models behind board games: counting
 ladders and slides, directions on a grid, tic-tac-toe, naming board squares, checkers jumps, chess piece moves
 and mini sudoku.
 
+**Mystery Pictures** (`#/color`) are color-by-answer pages: every square of a 10×10 or 14×14 grid holds a number
+or a problem (add/subtract to 10, 20 or 100, times tables, division), and coloring each square with the crayon
+for its answer reveals a hidden picture. Print them with an answer key, or color online.
+
 - **Practice online** — one question at a time with a buddy (pig, cow, chick, frog…). Get 8 of 10 right to
   unlock the next level. Number pad for tablets, optional sounds.
 - **Worksheets** — freshly generated every time, 1–5 pages, optional answer key, or an "easy → hard" sheet that
@@ -37,6 +41,7 @@ and publishes on push to `main`. Pages source must be set to "GitHub Actions".
 
 | Path | What |
 | --- | --- |
+| `src/coloring/` | Mystery pictures: the pixel-art pictures (`pictures.js`) and what goes in the squares (`modes.js`). Page UI in `src/components/Coloring.jsx`. |
 | `src/curriculum/games.js` | The Games topics (race track, grid walk, tic-tac-toe, board squares, checkers, chess, mini sudoku), included by the K and Grade 1 files. |
 | `src/curriculum/grade{K,1..5}.js` | Topics. Each has `levels`, a print layout (`cols`, `perPage`) and `gen(rng, level)` returning a problem. |
 | `src/curriculum/helpers.js` | The problem shape and builders: inline equations, column arithmetic, long division, number bonds, multiple choice. |

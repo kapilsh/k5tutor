@@ -5,6 +5,8 @@
 import { GRADES, TOPICS, generateSheet, layoutFor, valueFor } from '../src/curriculum/index.js'
 import { assemble, checkAnswer, fieldsOf, partsOf } from '../src/lib/answers.js'
 import { makeRng } from '../src/lib/rng.js'
+import { CRAYONS, PICTURES } from '../src/coloring/pictures.js'
+import { MODES, buildPage, crayonsOf } from '../src/coloring/modes.js'
 
 const FIG_TYPES = new Set(['critters', 'critter', 'tenFrame', 'baseTen', 'array', 'groups', 'clock', 'coins', 'ruler', 'angle', 'fraction', 'numberLine', 'decimalGrid', 'shape', 'pattern', 'rect', 'prism', 'coord', 'pictograph', 'bars', 'digital', 'sky', 'dice', 'track', 'board', 'chessPiece', 'ticTacToe', 'sudoku'])
 const SAMPLES = 400
@@ -120,10 +122,59 @@ for (const [spec, raw, want] of spot) {
   }
 }
 
+// CIE76 color difference; ~40+ reads as clearly different colors.
+function deltaE(h1, h2) {
+  const lab = (hex) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v > 0.04045 ? ((v + 0.055) / 1.055) ** 2.4 : v / 12.92))
+    const [x, y, z] = [[0.4124, 0.3576, 0.1805], [0.2126, 0.7152, 0.0722], [0.0193, 0.1192, 0.9505]].map((r) => r[0] * c[0] + r[1] * c[1] + r[2] * c[2])
+    const f = (t) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116)
+    const [fx, fy, fz] = [f(x / 0.95047), f(y), f(z / 1.08883)]
+    return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)]
+  }
+  const [a, b] = [lab(h1), lab(h2)]
+  return Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2])
+}
+
+// mystery pictures: every square's problem must equal an answer of its crayon
+const evalCell = (t) => {
+  const m = t.match(/^(\d+)(?: ([+−×÷]) (\d+))?$/)
+  if (!m) return NaN
+  const [, a, op, b] = m
+  return !op ? +a : op === '+' ? +a + +b : op === '−' ? a - b : op === '×' ? a * b : a / b
+}
+for (const pic of PICTURES) {
+  const n = pic.rows.length
+  const bad = (msg) => {
+    errors++
+    console.error(`✗ picture ${pic.id}: ${msg}`)
+  }
+  if (pic.rows.some((r) => r.length !== n)) bad('not square')
+  if (pic.rows.join('').split('').some((ch) => !CRAYONS[ch])) bad('unknown crayon')
+  if (crayonsOf(pic).length > 6) bad('more than 6 crayons')
+  const cs = crayonsOf(pic)
+  for (let i = 0; i < cs.length; i++)
+    for (let j = i + 1; j < cs.length; j++) {
+      const d = deltaE(CRAYONS[cs[i]].hex, CRAYONS[cs[j]].hex)
+      if (d < 40) bad(`${CRAYONS[cs[i]].name} and ${CRAYONS[cs[j]].name} look too alike (ΔE ${d.toFixed(0)})`)
+    }
+  for (const mode of MODES) {
+    for (let s = 1; s <= 60; s++) {
+      const { key, cells } = buildPage(pic, mode, s)
+      const all = key.flatMap((k) => k.values)
+      if (new Set(all).size !== all.length) bad(`${mode.id}: answers shared between crayons`)
+      const of = Object.fromEntries(key.map((k) => [k.ch, k.values]))
+      for (const c of cells.flat()) {
+        const v = evalCell(c.text)
+        if (v !== c.value || !of[c.ch].includes(v) || !Number.isInteger(v) || v < 0) bad(`${mode.id}: "${c.text}" should be ${c.value} for ${c.ch}`)
+      }
+    }
+  }
+}
+
 const topics = Object.keys(TOPICS).length
 const levels = Object.values(TOPICS).reduce((s, t) => s + t.levels.length, 0)
 if (errors) {
   console.error(`\n${errors} problem(s) found across ${total} generated problems`)
   process.exit(1)
 }
-console.log(`✓ ${topics} topics, ${levels} levels, ${total} problems generated — all valid`)
+console.log(`✓ ${topics} topics, ${levels} levels, ${total} problems generated, ${PICTURES.length} mystery pictures × ${MODES.length} modes — all valid`)

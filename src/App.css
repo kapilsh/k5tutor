@@ -1501,6 +1501,205 @@
   height: auto;
 }
 
+/* ---- Mystery pictures (color by answer) -------------------------------------- */
+.mystery-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 2rem;
+  padding: 1rem 1.3rem;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--ink);
+}
+.mystery-banner > span:nth-child(2) {
+  flex: 1 1 16rem;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink-dim);
+}
+.mystery-banner b {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+.mystery-banner-icon {
+  font-size: 2.2rem;
+}
+.mystery-banner-go {
+  font-weight: 800;
+  color: var(--primary);
+}
+.color-chip {
+  font-size: 1.05rem;
+}
+.mystery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.mystery-card h3 {
+  margin: 0.6rem 0 0;
+}
+.mystery-card .topic-blurb {
+  margin: 0.3rem 0;
+}
+.mystery-tile {
+  position: relative;
+  aspect-ratio: 1;
+  max-width: 100%;
+  border-radius: 12px;
+  background: #fffaf2;
+  overflow: hidden;
+}
+.mystery-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.mystery-tile span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 4rem;
+  color: color-mix(in srgb, var(--gc) 70%, white);
+}
+.mystery-meta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  margin-bottom: 0.7rem;
+}
+.mkey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin: 4px 0 12px;
+}
+.mkey-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 4px;
+  border: 1.5px solid #ccc;
+  border-radius: 999px;
+  background: #fff;
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--ink);
+}
+button.mkey-chip {
+  font-size: 1rem;
+  padding: 5px 14px 5px 5px;
+  border-width: 2.5px;
+  cursor: pointer;
+}
+button.mkey-chip.on {
+  border-color: var(--ink);
+  box-shadow: 0 3px 0 var(--ink);
+  transform: translateY(-2px);
+}
+.mkey-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #555;
+  flex: none;
+}
+button.mkey-chip .mkey-swatch {
+  width: 28px;
+  height: 28px;
+}
+.mkey-name {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85em;
+  color: #555;
+}
+.mgrid-wrap {
+  overflow-x: auto;
+}
+.mgrid {
+  display: grid;
+  width: max-content;
+  margin-inline: auto;
+  border: 2.5px solid #333;
+  background: #333;
+  gap: 1px;
+  user-select: none;
+}
+.mcell {
+  display: grid;
+  place-items: center;
+  background: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: #333;
+  font-size: calc(var(--cell) * 0.36);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.mgrid.long .mcell {
+  font-size: calc(var(--cell) * 0.23);
+}
+.mystery-answer {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  text-align: center;
+}
+.mystery-answer i {
+  display: inline-block;
+  width: 260px;
+  border-bottom: 1.5px solid #333;
+  margin: 0 6px;
+}
+/* online: squares size to the screen */
+.color-online {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.color-online .mkey {
+  justify-content: center;
+}
+.mgrid.online {
+  /* squares fill up to 640px, but never get too small to read: then the grid scrolls sideways */
+  --cellw: max(calc(min(100vw - 32px, 640px) / var(--n)), var(--minc));
+  width: calc(var(--cellw) * var(--n));
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.mgrid.online .mcell {
+  aspect-ratio: 1;
+  font-size: min(calc(var(--cellw) * 0.34), 20px);
+}
+.mgrid.online.long .mcell {
+  font-size: min(calc(var(--cellw) * 0.22), 15px);
+}
+.mgrid.online .mcell.bad {
+  outline: 3px solid var(--bad);
+  outline-offset: -3px;
+}
+.mgrid.online.done .mcell {
+  color: transparent !important;
+  transition: color 0.6s ease;
+}
+.mgrid.online.done {
+  gap: 0;
+}
+.mystery-progress {
+  font-weight: 700;
+  color: var(--ink-dim);
+}
+
 /* ---- Responsive ----------------------------------------------------------- */
 @media (max-width: 900px) {
   .hero {

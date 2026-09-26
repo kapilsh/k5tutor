@@ -6,12 +6,15 @@ import Home from './components/Home.jsx'
 import GradePage from './components/GradePage.jsx'
 import Practice from './components/Practice.jsx'
 import Worksheet from './components/Worksheet.jsx'
+import { ColoringGallery, ColoringPage } from './components/Coloring.jsx'
+import { PICTURE } from './coloring/modes.js'
 import './App.css'
 
 export default function App() {
   const route = useRoute()
   const [page, arg] = route.parts
-  const topic = arg ? TOPICS[arg] : null
+  const topic = arg && page !== 'color' ? TOPICS[arg] : null
+  const pic = page === 'color' && arg ? PICTURE[arg] : null
   const grade = page === 'grade' ? GRADES.find((g) => g.id === arg) : topic ? GRADES.find((g) => g.id === topic.grade) : null
 
   useEffect(() => {
@@ -20,13 +23,15 @@ export default function App() {
 
   useEffect(() => {
     const base = 'K5 Tutor — free math practice & printable worksheets'
-    document.title = topic ? `${topic.title} · ${topic.gradeLabel} · K5 Tutor` : grade ? `${grade.label} math · K5 Tutor` : base
-  }, [topic, grade])
+    document.title = topic ? `${topic.title} · ${topic.gradeLabel} · K5 Tutor` : grade ? `${grade.label} math · K5 Tutor` : page === 'color' ? `Mystery Pictures · K5 Tutor` : base
+  }, [topic, grade, page])
 
   let body
   if (page === 'grade' && grade) body = <GradePage grade={grade} />
   else if (page === 'practice' && topic) body = <Practice key={topic.id} topic={topic} query={route.query} />
   else if (page === 'worksheet' && topic) body = <Worksheet key={topic.id} topic={topic} query={route.query} />
+  else if (page === 'color' && pic) body = <ColoringPage key={pic.id} pic={pic} query={route.query} />
+  else if (page === 'color') body = <ColoringGallery query={route.query} />
   else body = <Home />
 
   return (
@@ -39,6 +44,9 @@ export default function App() {
           </span>
         </a>
         <nav className="grade-nav" aria-label="Grades">
+          <a href={href('/color')} className={`grade-chip color-chip ${page === 'color' ? 'on' : ''}`} style={{ '--gc': 'var(--g-2)' }} title="Mystery pictures to color">
+            🖍️
+          </a>
           {GRADES.map((g) => (
             <a key={g.id} href={href(`/grade/${g.id}`)} className={`grade-chip ${grade?.id === g.id ? 'on' : ''}`} style={{ '--gc': g.color }} title={g.label}>
               {g.short}

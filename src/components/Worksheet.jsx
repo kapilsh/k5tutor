@@ -147,7 +147,7 @@ export default function Worksheet({ topic, query }) {
 }
 
 // Scales a letter-size page down to fit narrow screens without affecting print/PDF.
-function PaperSlot({ children }) {
+export function PaperSlot({ children }) {
   const ref = useRef(null)
   const [scale, setScale] = useState(1)
   useLayoutEffect(() => {
